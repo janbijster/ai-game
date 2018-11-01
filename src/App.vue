@@ -1,31 +1,71 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
+    <div id="nav" style="display:none"><!-- only for debugging -->
+      <router-link to="/">Simulation</router-link> |
+      <router-link to="/create">Create Agent</router-link> |
+      <router-link to="/create/input">Create Agent - select input</router-link> |
+      <router-link to="/create/collect">Create Agent - collect samples</router-link>
+    </div>
   </div>
 </template>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import 'assets/css/colors.css';
+@import 'assets/css/typo.css';
+@font-face {
+  font-family: "PressStart2P-Regular";
+  src: url("assets/fonts/PressStart2P-Regular.ttf") format("truetype");
+}
+
+body {
+  overflow: hidden;
   text-align: center;
-  color: #2c3e50;
 }
+#app {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
 #nav {
-  padding: 30px;
+  position: absolute;
+  bottom: 10px;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.left-part {
+  position: absolute;
+  left: 30px;
+  right: calc(50% + 15px);
+  top: 0;
+  bottom: 0;
+}
+.right-part {
+  position: absolute;
+  left: calc(50% + 15px);
+  right: 30px;
+  top: 0;
+  bottom: 0;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+.fill-parent-absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
+.vertical-center {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.vertical-center {
+  margin-top:auto;
+  margin-bottom: auto;
+}
+
 </style>

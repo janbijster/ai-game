@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Simulation from './views/Simulation.vue'
+import CreateAgent from './views/CreateAgent.vue'
+import CreateAgentStart from './views/CreateAgentStart.vue'
+import CreateAgentSelectInput from './views/CreateAgentSelectInput.vue'
+import CreateAgentCollectSamples from './views/CreateAgentCollectSamples.vue'
+import CreateAgentTrain from './views/CreateAgentTrain.vue'
 
 Vue.use(Router)
 
@@ -8,16 +13,34 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'simulation',
+      component: Simulation
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      path: '/create',
+      component: CreateAgent,
+      children: [
+        {
+          path: '',
+          name: 'createAgent',
+          component: CreateAgentStart
+        },
+        {
+          path: 'input',
+          name: 'createAgentSelectInput',
+          component: CreateAgentSelectInput
+        },
+        {
+          path: 'collect',
+          name: 'createAgentCollectSamples',
+          component: CreateAgentCollectSamples
+        },
+        {
+          path: 'train',
+          name: 'createAgentTrain',
+          component: CreateAgentTrain
+        }
+      ]
     }
   ]
 })
