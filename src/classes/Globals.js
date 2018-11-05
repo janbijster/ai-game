@@ -13,7 +13,7 @@ export default class Globals {
   }
 
   static get requiredRobots () {
-    return 3
+    return 1
   }
 
   static get keys () {
@@ -54,6 +54,20 @@ export default class Globals {
   }
 
   static get neededNumSamples () {
-    return 20
+    return 30
+  }
+
+  static get trainingTime () {
+    return 15
+  }
+
+  static get agentSpeed () {
+    return 0.1
+  }
+
+  static forceArrayChangeDetection (arr) {
+    // this is sometimes needed to make Vue detect changes in arrays.
+    // by replacing the array with a shallow copy of itself the change should get detected:
+    arr = arr.slice()
   }
 }

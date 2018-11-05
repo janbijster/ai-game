@@ -14,3 +14,10 @@ body {
 .font-sm {
   font-size: 12px;
 }
+
+.align-left {
+  text-align: left;
+}
+.align-right {
+  text-align: right;
+}

@@ -30,6 +30,18 @@ body {
   color: #E5C07B;
 }
 
+.bg-color-red {
+  background-color: #E06C75;
+}
+.bg-color-green {
+  background-color: #98C379;
+}
+.bg-color-blue {
+  background-color: #528BFF;
+}
+.bg-color-yellow {
+  background-color: #E5C07B;
+}
 
 .opacity-10 {
   opacity: 0.1;

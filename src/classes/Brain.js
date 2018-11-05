@@ -10,7 +10,7 @@ export default class Brain {
     // standard network architecture:
     // one hidden layer, same number of nodes as input_dim
     if (hiddenLayers === null) {
-      hiddenLayers = [inputDimension]
+      hiddenLayers = [inputDimension, inputDimension]
     }
 
     // in- and output dimensions and hidden layers
@@ -28,7 +28,9 @@ export default class Brain {
     // internal list of samples
     this.samples = []
 
-    this.modelState = {}
+    this.modelState = {
+      movingAverageLoss: 1
+    }
 
     this.currentInput = new Array(inputDimension).fill(0)
     this.currentOutput = new Array(outputDimension).fill(0)
@@ -143,6 +145,8 @@ export default class Brain {
     let prediction = this.model.predict(tf.tensor([input]))
     prediction.data().then(data => {
       this.currentOutput = Array.from(data)
+      console.log('input:', this.currentInput, 'output:', this.currentOutput)
+      console.log('samples:', this.samples)
     })
   }
 

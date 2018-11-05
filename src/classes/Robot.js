@@ -19,10 +19,14 @@ import RobotPart from './RobotPart.js'
 
 export default class Robot {
   constructor (parts) {
-    this.parts = parts.map(part => new RobotPart(part.sensors, part.actuators))
+    this.id = this.uuidv4()
+    this.parts = parts.map(part => new RobotPart(part.sensors, part.actuators, this.id))
   }
 
   setEnvironmentState (environmentState) {
+    // environmentState holds information about the environment:
+    // an array of robots and resources, objects containing x and y position (in the range 0-1).
+    // agents also contain an id.
     this.parts.forEach((robotPart) => {
       robotPart.setEnvironmentState(environmentState)
     })
@@ -37,11 +41,14 @@ export default class Robot {
           if (Math.abs(value) > Math.abs(actuatorState[key])) {
             actuatorState[key] = value
           }
+        } else {
+          actuatorState[key] = value
         }
       })
       // if there are no overlapping actuators, this would do:
       // Object.assign(actuatorState, robotPart.getActuatorState());
     })
+
     return actuatorState
   }
 
@@ -83,5 +90,13 @@ export default class Robot {
 
   train (partIndex, maximumNumberOfSamples, maximumTime = Infinity, stopIfNotImproving = false) {
     this.parts[partIndex].train(maximumNumberOfSamples, maximumTime, stopIfNotImproving)
+  }
+
+  uuidv4 () {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      let r = Math.random() * 16 | 0
+      let v = c === 'x' ? r : (r & 0x3 | 0x8)
+      return v.toString(16)
+    })
   }
 }
