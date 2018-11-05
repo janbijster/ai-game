@@ -8,9 +8,9 @@ const _ = require('lodash')
 export default class Brain {
   constructor (inputDimension, outputDimension, hiddenLayers = null) {
     // standard network architecture:
-    // one hidden layer, same number of nodes as input_dim
+    // one hidden layer, with 2 * input_dim as the number of nodes
     if (hiddenLayers === null) {
-      hiddenLayers = [2*inputDimension]
+      hiddenLayers = [2 * inputDimension]
     }
 
     // in- and output dimensions and hidden layers
@@ -145,8 +145,8 @@ export default class Brain {
     let prediction = this.model.predict(tf.tensor([input]))
     prediction.data().then(data => {
       this.currentOutput = Array.from(data)
-      console.log('input:', this.currentInput, 'output:', this.currentOutput)
-      console.log('samples:', this.samples)
+      // console.log('input:', this.currentInput, 'output:', this.currentOutput)
+      // console.log('samples:', this.samples)
     })
   }
 

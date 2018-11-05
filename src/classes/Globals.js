@@ -54,7 +54,7 @@ export default class Globals {
   }
 
   static get neededNumSamples () {
-    return 30
+    return 25
   }
 
   static get trainingTime () {
@@ -62,7 +62,15 @@ export default class Globals {
   }
 
   static get agentSpeed () {
-    return 0.1
+    return 3
+  }
+
+  static get newAgentsAtScore () {
+    return 10
+  }
+
+  static get gameWonAtScore () {
+    return 30
   }
 
   static forceArrayChangeDetection (arr) {

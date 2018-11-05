@@ -1,9 +1,9 @@
 <template>
   <div class="stage-box" ref="box">
     <div id="stage" :style="stageStyle">
-      <div v-for="(resource, index) in resourceObjects" :key="index" class="resource bg-color-green" :style="resourceStyle(resource)"></div>
-      <div v-for="(agent, index) in redAgentObjects" :key="`A-${index}`" class="red-agent bg-color-red" :style="agentStyle(agent)"></div>
-      <div v-for="(agent, index) in blueAgentObjects" :key="`B-${index}`" class="blue-agent bg-color-blue" :style="agentStyle(agent)"></div>
+      <div v-for="(resource, index) in resourceObjects" :key="index" :ref="`resource-${index}`" class="resource bg-color-green" :style="resourceStyle(resource)"></div>
+      <div v-for="(agent, index) in redAgentObjects" :key="`A-${index}`" :ref="`red-agent-${index}`" class="red-agent bg-color-red" :style="agentStyle(agent)"></div>
+      <div v-for="(agent, index) in blueAgentObjects" :key="`B-${index}`" :ref="`blue-agent-${index}`" class="blue-agent bg-color-blue" :style="agentStyle(agent)"></div>
     </div>
   </div>
 </template>
@@ -22,8 +22,10 @@ export default {
       mediumObjectSize: 0,
       bigObjectSize: 0,
       objectSize: 0,
+      mediumObjectSquareCollisionDistance: 0,
       redAgentObjects: [],
       blueAgentObjects: [],
+      allAgentObjects: [],
       resourceObjects: [],
       numResources: 5,
       previousTimestamp: null,
@@ -38,9 +40,10 @@ export default {
     if (this.$refs['box'] != null) {
       this.bounds = this.$refs['box'].getBoundingClientRect()
       this.minimumDimension = Math.min(this.bounds.width, this.bounds.height)
-      this.smallObjectSize = 0.03 * this.minimumDimension
-      this.mediumObjectSize = 0.04 * this.minimumDimension
+      this.smallObjectSize = 0.05 * this.minimumDimension
+      this.mediumObjectSize = 0.07 * this.minimumDimension
       this.bigObjectSize = 0.1 * this.minimumDimension
+      this.mediumObjectSquareCollisionDistance = Math.pow(this.mediumObjectSize / this.minimumDimension, 2)
     }
     this.updateStageStyle()
 
@@ -61,22 +64,22 @@ export default {
       agentObject.agent = agent
       agent.agentObject = agentObject
     })
+    this.allAgentObjects = this.redAgentObjects.concat(this.blueAgentObjects)
 
-    // create resources todo: create and destroy dynamically
+    // create resources
     for (let i = 0; i < this.numResources; i++) {
       let resourceObject = this.randomPosition()
       resourceObject.life = Math.random()
       this.resourceObjects.push(resourceObject)
     }
 
-    this.$store.commit('resetScore')
+    // this.$store.commit('resetScore')
 
     // turn on:
     // turn on robot sensors and brains
-    let allAgents = this.$store.state.redAgents.concat(this.$store.state.blueAgents)
-    allAgents.forEach(agent => {
-      agent.robot.turnBrainOn()
-      agent.robot.turnSensorsOn()
+    this.allAgentObjects.forEach(agentObject => {
+      agentObject.agent.robot.turnBrainOn()
+      agentObject.agent.robot.turnSensorsOn()
     })
     window.requestAnimationFrame(this.update.bind(this))
   },
@@ -94,9 +97,7 @@ export default {
         resource.life -= (deltaTime / this.resourceVanishingTime)
         // and relocate when the time is there:
         if (resource.life < 0) {
-          resource.x = Math.random() - 0.5
-          resource.y = Math.random() - 0.5
-          resource.life = 1
+          this.renewResource(resource)
         }
       })
 
@@ -107,17 +108,19 @@ export default {
         resources: this.resourceObjects
       }
       // pass to agents
-      let allAgents = this.$store.state.redAgents.concat(this.$store.state.blueAgents)
-      allAgents.forEach(agent => {
-        agent.robot.setEnvironmentState(environmentState)
+      this.allAgentObjects.forEach(agentObject => {
+        agentObject.agent.robot.setEnvironmentState(environmentState)
       })
 
-      // retrieve robot actuator state
+      // retrieve robot actuator state and move
       this.redAgentObjects.forEach(agentObject => {
         let actuators = agentObject.agent.robot.getActuatorState()
-        this.moveRedAgent(agentObject, actuators['MOVE_X'], actuators['MOVE_Y'], deltaTime)
+        this.moveAgent(agentObject, actuators['MOVE_X'], actuators['MOVE_Y'], deltaTime, 'red')
       })
-      // hereiam move blue agent, detect collisions, tweak model
+      this.blueAgentObjects.forEach(agentObject => {
+        let actuators = agentObject.agent.robot.getActuatorState()
+        this.moveAgent(agentObject, actuators['MOVE_X'], actuators['MOVE_Y'], deltaTime, 'blue')
+      })
 
       window.requestAnimationFrame(this.update.bind(this))
     },
@@ -138,17 +141,76 @@ export default {
         }
       }
     },
-    moveRedAgent (agentObject, x, y, deltaTime) {
-      // move object
-      // todo: max x, y vector length so diagonal move is not faster
+    makeUnitLength (x, y) {
       if (Math.abs(x) > 0 || Math.abs(y) > 0) {
         let length = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
         x = x / length
         y = y / length
       }
+      return { x: x, y: y }
+    },
+    moveAgent (agentObject, x, y, deltaTime, color) {
+      // move object
+      // calculate unit vector in move direction
+      // let unitVector = this.makeUnitLength(x, y)
+      // x = unitVector.x
+      // y = unitVector.y
+      // insert some inertia:
+      if (agentObject.lastX !== undefined) {
+        x = 0.02 * x + 0.98 * agentObject.lastX
+        y = 0.02 * y + 0.98 * agentObject.lastY
+      }
+      agentObject.lastX = x
+      agentObject.lastY = y
+
       agentObject.x += x * Globals.agentSpeed * deltaTime
       agentObject.y += y * Globals.agentSpeed * deltaTime
       // detect collisions
+
+      // resources:
+      this.resourceObjects.forEach(resourceObject => {
+        if (
+          this.squareDistance(resourceObject, agentObject) <
+          Math.pow(0.5 * (this.mediumObjectSize + resourceObject.life * this.smallObjectSize) / this.minimumDimension, 2)
+        ) {
+          // resource hit!
+          let mutationName = color === 'red' ? 'incrementScoreRed' : 'incrementScoreBlue'
+          this.$store.commit(mutationName)
+          this.renewResource(resourceObject)
+        }
+      })
+
+      // agents:
+      this.allAgentObjects.forEach(otherAgentObject => {
+        if (otherAgentObject !== agentObject) {
+          let dist = this.squareDistance(agentObject, otherAgentObject)
+          if (dist < this.mediumObjectSquareCollisionDistance) {
+            // collide with other agent
+            // push other agent out of the way:
+            let xNudge = otherAgentObject.x - agentObject.x
+            let yNudge = otherAgentObject.y - agentObject.y
+            let unitVector = this.makeUnitLength(xNudge, yNudge)
+            xNudge = unitVector.x
+            yNudge = unitVector.y
+            // the 0.51 in the following line is to make sure that if they both nudge each other, they stop overlapping
+            let nudgeSize = 0.51 * Math.sqrt(this.mediumObjectSquareCollisionDistance - dist)
+            otherAgentObject.x += xNudge * nudgeSize
+            otherAgentObject.y += yNudge * nudgeSize
+          }
+        }
+      })
+    },
+    squareDistance (object1, object2) {
+      return Math.pow(object1.x - object2.x, 2) + Math.pow(object1.y - object2.y, 2)
+    },
+    renewResource (resourceObject) {
+      if (resourceObject == null) {
+        resourceObject = {}
+      }
+      resourceObject.x = Math.random() - 0.5
+      resourceObject.y = Math.random() - 0.5
+      resourceObject.life = 1
+      return resourceObject
     },
     randomPosition () {
       return {
@@ -183,7 +245,7 @@ export default {
   }
   #stage {
     position: absolute;
-    overflow: hidden;
+    /* overflow: hidden; */
     border: 2px solid #ABB2BF;
     background-color: #21252B;
   }
@@ -191,5 +253,11 @@ export default {
   .resource, .red-agent, .blue-agent {
     position: absolute;
     border-radius: 100%;
+  }
+  .red-agent, .blue-agent {
+    box-shadow: -15px 15px 3px rgba(0, 0, 0, 0.3);
+  }
+  .resource {
+    box-shadow: -3px 3px 3px rgba(0, 0, 0, 0.3);
   }
 </style>

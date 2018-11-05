@@ -21,10 +21,18 @@ export default new Vuex.Store({
       state.blueAgents.push(agent)
     },
     incrementScoreRed (state) {
-      state.score.red += 1
+      let newScore = {
+        red: state.score.red + 1,
+        blue: state.score.blue
+      }
+      state.score = newScore
     },
     incrementScoreBlue (state) {
-      state.score.blue += 1
+      let newScore = {
+        red: state.score.red,
+        blue: state.score.blue + 1
+      }
+      state.score = newScore
     },
     resetScore (state) {
       state.score = {

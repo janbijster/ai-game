@@ -23,7 +23,7 @@ export default {
       this.minimumDimension = Math.min(this.bounds.width, this.bounds.height)
       this.smallObjectSize = 0.03 * this.minimumDimension
       this.mediumObjectSize = 0.04 * this.minimumDimension
-      this.bigObjectSize = 0.1 * this.minimumDimension
+      this.bigObjectSize = 0.05 * this.minimumDimension
     }
 
     if (this.agent != null) {
@@ -115,6 +115,12 @@ export default {
       }
       style.left = 0.5 * (objectPosition.x + 1) * this.minimumDimension - 0.5 * this.objectSize + 'px'
       style.top = 0.5 * (-objectPosition.y + 1) * this.minimumDimension - 0.5 * this.objectSize + 'px'
+
+      if (objectPosition.x < 0) {
+        console.log('LEFT of center')
+      } else {
+        console.log('RIGHT of center')
+      }
 
       this.objectStyle = style
     }

@@ -30,12 +30,7 @@ export default {
     SimulationSpace
   },
   mounted () {
-    if (this.$store.state.redAgents.length < Globals.requiredRobots) {
-      this.$store.commit('turnSimulationOff')
-      this.$router.push({ name: 'createAgent' })
-    } else {
-      this.$store.commit('turnSimulationOn')
-    }
+    this.checkScores()
   },
   computed: {
     redAgents () {
@@ -46,6 +41,34 @@ export default {
     },
     score () {
       return this.$store.state.score
+    }
+  },
+  methods: {
+    checkScores () {
+      // check if game is won:
+      if (
+        this.$store.state.score.red === Globals.gameWonAtScore ||
+        this.$store.state.score.blue === Globals.gameWonAtScore
+      ) {
+        this.$router.push({ name: 'gameOver' })
+      }
+
+      // check if it is time for a new agent:
+      if (
+        this.$store.state.score.red % Globals.newAgentsAtScore === 0 ||
+        this.$store.state.score.blue % Globals.newAgentsAtScore === 0
+      ) {
+        this.$store.commit('turnSimulationOff')
+        this.$router.push({ name: 'createAgent' })
+      } else {
+        this.$store.commit('turnSimulationOn')
+      }
+    }
+  },
+  watch: {
+    score () {
+      console.log('score change')
+      this.checkScores()
     }
   }
 }

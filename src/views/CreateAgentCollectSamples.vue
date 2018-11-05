@@ -50,7 +50,7 @@
           <div class="center-message">Done!</div>
         </template>
         <div class="sample-status color-accent font-sm">
-          Samples collected: {{ samplesBlue.length }}
+          Samples collected: {{ samplesBlue.length }}/{{ neededNumSamples }}
         </div>
       </div>
 
@@ -96,10 +96,16 @@ export default {
       // for now this is a really simple function, later move to own class.
       // to save a little memory, samples are 2d arrays:
       // sample[0] = input, sample[1] = output, sample[0][0] = input dim1, etc
+
+      // we square the values so there are more samples close by, these are more important
       return [[
-        Math.random() * 2 - 1,
-        Math.random() * 2 - 1
+        this.randomDistribution(),
+        this.randomDistribution()
       ]]
+    },
+    randomDistribution () {
+      // random between -1 and 1, with more chance on values close to 0
+      return Math.pow(Math.random() * 2 - 1, 3)
     },
     outputSelectedRed (output) {
       if (output !== null) {

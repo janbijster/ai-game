@@ -88,6 +88,9 @@ export default {
       this.$store.commit('addRedAgent', this.redAgent)
       this.$store.commit('addBlueAgent', this.blueAgent)
       clearInterval(this.intervalId)
+      // todo change temp hack into a better mechanism
+      this.$store.commit('incrementScoreRed')
+      this.$store.commit('incrementScoreBlue')
       this.$router.push({ name: 'simulation' })
       this.$store.commit('turnSimulationOn')
     }

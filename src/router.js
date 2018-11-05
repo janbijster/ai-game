@@ -6,6 +6,7 @@ import CreateAgentStart from './views/CreateAgentStart.vue'
 import CreateAgentSelectInput from './views/CreateAgentSelectInput.vue'
 import CreateAgentCollectSamples from './views/CreateAgentCollectSamples.vue'
 import CreateAgentTrain from './views/CreateAgentTrain.vue'
+import GameOver from './views/GameOver.vue'
 
 Vue.use(Router)
 
@@ -41,6 +42,11 @@ export default new Router({
           component: CreateAgentTrain
         }
       ]
+    },
+    {
+      path: '/gameover',
+      name: 'gameOver',
+      component: GameOver
     }
   ]
 })
