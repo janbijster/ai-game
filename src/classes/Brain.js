@@ -10,7 +10,7 @@ export default class Brain {
     // standard network architecture:
     // one hidden layer, same number of nodes as input_dim
     if (hiddenLayers === null) {
-      hiddenLayers = [inputDimension, inputDimension]
+      hiddenLayers = [2*inputDimension]
     }
 
     // in- and output dimensions and hidden layers
