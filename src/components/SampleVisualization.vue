@@ -116,12 +116,6 @@ export default {
       style.left = 0.5 * (objectPosition.x + 1) * this.minimumDimension - 0.5 * this.objectSize + 'px'
       style.top = 0.5 * (-objectPosition.y + 1) * this.minimumDimension - 0.5 * this.objectSize + 'px'
 
-      if (objectPosition.x < 0) {
-        console.log('LEFT of center')
-      } else {
-        console.log('RIGHT of center')
-      }
-
       this.objectStyle = style
     }
   },
@@ -143,6 +137,8 @@ export default {
   }
   .object {
     position: absolute;
+    border-radius: 0 !important;
+
   }
   #viewport {
     position: absolute;

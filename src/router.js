@@ -13,12 +13,12 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/simulation',
       name: 'simulation',
       component: Simulation
     },
     {
-      path: '/create',
+      path: '/',
       component: CreateAgent,
       children: [
         {

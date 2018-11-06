@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle">Training {{ timeRemaining | round }}...</div>
+    <div class="subtitle">{{ currentTask }}<template v-if="isTraining"> {{ timeRemaining | round }}</template>...</div>
     <div class="training-visualization">
       <div class="left-part color-red">
         <div class="margin-top">
@@ -38,6 +38,8 @@ export default {
   },
   data () {
     return {
+      isTraining: false,
+      currentTask: 'Creating agents',
       redRobot: null,
       blueRobot: null,
       intervalId: null,
@@ -45,28 +47,41 @@ export default {
       blueLossIndicatorStyle: {},
       loss: { red: 1, blue: 1 },
       timeRemaining: 10,
-      updateInterval: 200
+      updateInterval: 1000,
+      agentsDone: 0
     }
   },
   mounted () {
-    this.timeRemaining = Globals.trainingTime
-    this.redAgent.robot = new Robot([this.redAgent.part])
-    this.blueAgent.robot = new Robot([this.blueAgent.part])
-    console.log('just created the robots, states: ', this.redAgent.robot.getState(), this.blueAgent.robot.getState())
-    console.log('now let\'s train...')
-    this.redAgent.robot.setSamples(0, this.redAgent.samples)
-    // train part 0 of the red robot for 10 seconds:
-    this.redAgent.robot.train(0, Infinity, 10)
-
-    this.blueAgent.robot.setSamples(0, this.blueAgent.samples)
-    // train part 0 of the blue robot for 10 seconds:
-    this.blueAgent.robot.train(0, Infinity, this.timeRemaining)
-
-    this.intervalId = setInterval(this.showProgress, this.updateInterval)
-    setTimeout(this.stopTraining, 1000 * (this.timeRemaining + 0.2))
+    // create agents after everything is loaded:
+    setTimeout(this.createAgents.bind(this), 500)
   },
   methods: {
-    showProgress (timetamp) {
+    createAgents () {
+      this.currentTask = 'Creating models'
+      this.redAgent.robot = new Robot([this.redAgent.part])
+      this.blueAgent.robot = new Robot([this.blueAgent.part])
+      setTimeout(this.startTraining.bind(this), 1000)
+    },
+    startTraining () {
+      console.log('just created the robots, states: ', this.redAgent.robot.getState(), this.blueAgent.robot.getState())
+      console.log('now let\'s train...')
+
+      this.currentTask = 'Training'
+      this.isTraining = true
+      this.timeRemaining = Globals.trainingTime
+
+      this.redAgent.robot.setSamples(0, this.redAgent.samples)
+      // train part 0 of the red robot for 10 seconds:
+      this.redAgent.robot.train(0, Infinity, this.timeRemaining)
+
+      this.blueAgent.robot.setSamples(0, this.blueAgent.samples)
+      // train part 0 of the blue robot for 10 seconds:
+      this.blueAgent.robot.train(0, Infinity, this.timeRemaining)
+
+      this.intervalId = setInterval(this.showProgress, this.updateInterval)
+      setTimeout(this.stopTraining.bind(this), 1000 * (this.timeRemaining + 0.2))
+    },
+    showProgress () {
       // console.log('red: ', this.redAgent.robot.getState().parts[0].modelState.currentLoss)
       // console.log('blue: ', this.blueAgent.robot.getState().parts[0].modelState.currentLoss)
       this.timeRemaining -= 0.001 * this.updateInterval

@@ -85,6 +85,9 @@ export default {
   },
   methods: {
     update (timestamp) {
+      if (!this.$store.state.simulationOn) {
+        return
+      }
       // compute deltaTime:
       let deltaTime = 0
       if (this.previousTimestamp != null) {
@@ -157,8 +160,8 @@ export default {
       // y = unitVector.y
       // insert some inertia:
       if (agentObject.lastX !== undefined) {
-        x = 0.02 * x + 0.98 * agentObject.lastX
-        y = 0.02 * y + 0.98 * agentObject.lastY
+        x = (1 - this.inertia) * x + this.inertia * agentObject.lastX
+        y = (1 - this.inertia) * y + this.inertia * agentObject.lastY
       }
       agentObject.lastX = x
       agentObject.lastY = y
@@ -199,6 +202,13 @@ export default {
           }
         }
       })
+
+      // walls:
+      agentObject.x = this.clamp(agentObject.x, -0.5, 0.5)
+      agentObject.y = this.clamp(agentObject.y, -0.5, 0.5)
+    },
+    clamp (val, min, max) {
+      return Math.min(Math.max(val, min), max)
     },
     squareDistance (object1, object2) {
       return Math.pow(object1.x - object2.x, 2) + Math.pow(object1.y - object2.y, 2)
@@ -233,6 +243,11 @@ export default {
         left: ((x + 0.5) * this.minimumDimension - 0.5 * dim) + 'px',
         top: ((-y + 0.5) * this.minimumDimension - 0.5 * dim) + 'px'
       }
+    }
+  },
+  computed: {
+    inertia () {
+      return Globals.agentInertia
     }
   }
 }

@@ -11,11 +11,11 @@
 import Brain from './Brain.js'
 
 export default class RobotPart {
-  constructor (sensors, actuators, id) {
+  constructor (sensors, actuators, id, callback) {
     this.robotId = id
     this.sensors = sensors
     this.actuators = actuators
-    this.brain = new Brain(sensors.length, actuators.length)
+    this.brain = new Brain(sensors.length, actuators.length, null, callback)
 
     this.state = {
       sensorsOn: false,

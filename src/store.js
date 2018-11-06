@@ -11,6 +11,11 @@ export default new Vuex.Store({
       red: 0,
       blue: 0
     },
+    rounds: {
+      red: 0,
+      blue: 0
+    },
+    scoreHistory: [],
     simulationOn: false
   },
   mutations: {
@@ -33,6 +38,21 @@ export default new Vuex.Store({
         blue: state.score.blue + 1
       }
       state.score = newScore
+    },
+    newRound (state) {
+      let newRounds = state.rounds
+      if (state.score.red > state.score.blue) {
+        newRounds.red += 1
+      } else {
+        newRounds.blue += 1
+      }
+      state.rounds = newRounds
+
+      state.scoreHistory.push(state.score)
+      state.score = {
+        red: 0,
+        blue: 0
+      }
     },
     resetScore (state) {
       state.score = {

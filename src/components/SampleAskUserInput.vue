@@ -14,6 +14,7 @@
 export default {
   name: 'SampleAskUserInput',
   props: {
+    inputSample: Array,
     navKeys: Object
   },
   mounted () {
@@ -49,6 +50,8 @@ export default {
       }
       if ('enter' in this.navKeys && this.navKeys.enter === event.key) {
         output = [0, 0]
+        // cheat hack: output = input todo remove
+        output = this.inputSample[0]
       }
       if ('back' in this.navKeys && this.navKeys.back === event.key) {
         skipped = true

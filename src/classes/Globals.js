@@ -12,10 +12,6 @@ export default class Globals {
     return ['MOVE_X', 'MOVE_Y']
   }
 
-  static get requiredRobots () {
-    return 1
-  }
-
   static get keys () {
     return {
       red: {
@@ -58,19 +54,23 @@ export default class Globals {
   }
 
   static get trainingTime () {
-    return 15
+    return 20
   }
 
   static get agentSpeed () {
     return 3
   }
 
-  static get newAgentsAtScore () {
-    return 10
+  static get agentInertia () {
+    return 0.95
   }
 
-  static get gameWonAtScore () {
-    return 30
+  static get roundWonScore () {
+    return 25
+  }
+
+  static get gameWonRounds () {
+    return 3
   }
 
   static forceArrayChangeDetection (arr) {

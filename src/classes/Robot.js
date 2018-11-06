@@ -18,9 +18,21 @@
 import RobotPart from './RobotPart.js'
 
 export default class Robot {
-  constructor (parts) {
+  constructor (parts, callback) {
     this.id = this.uuidv4()
-    this.parts = parts.map(part => new RobotPart(part.sensors, part.actuators, this.id))
+    this.constructorCallback = callback
+    this.numberOfParts = parts.length
+    this.partsConstructed = 0
+    this.parts = parts.map(part => new RobotPart(part.sensors, part.actuators, this.id, this.partDone.bind(this)))
+  }
+
+  partDone () {
+    this.partsConstructed += 1
+    if (this.partsConstructed === this.numberOfParts) {
+      if (this.constructorCallback != null) {
+        this.constructorCallback()
+      }
+    }
   }
 
   setEnvironmentState (environmentState) {

@@ -6,7 +6,7 @@ import * as tf from '@tensorflow/tfjs'
 const _ = require('lodash')
 
 export default class Brain {
-  constructor (inputDimension, outputDimension, hiddenLayers = null) {
+  constructor (inputDimension, outputDimension, hiddenLayers, callback) {
     // standard network architecture:
     // one hidden layer, with 2 * input_dim as the number of nodes
     if (hiddenLayers === null) {
@@ -19,7 +19,7 @@ export default class Brain {
     this.hiddenLayers = hiddenLayers
 
     // training batch size:
-    this.batchSize = 8
+    this.batchSize = 4
 
     this.lossMovingAverageSpeed = 0.05
 
@@ -36,6 +36,10 @@ export default class Brain {
     this.currentOutput = new Array(outputDimension).fill(0)
 
     this.model = this.makeModel()
+
+    if (callback != null) {
+      callback()
+    }
   }
 
   makeModel () {

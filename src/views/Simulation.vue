@@ -7,12 +7,12 @@
     <div id="status">
       <div class="left-part">
         <div class="color-red align-left">
-          Resources gathered: {{ score.red }}
+          Score: {{ score.red }} | Rounds: {{ rounds.red }}
         </div>
       </div>
       <div class="right-part">
         <div class="color-blue align-right">
-          Resources gathered: {{ score.blue }}
+          Resources gathered: {{ score.blue }} | Rounds: {{ rounds.blue }}
         </div>
       </div>
     </div>
@@ -31,6 +31,10 @@ export default {
   },
   mounted () {
     this.checkScores()
+    if (this.$store.state.redAgents.length === 0) {
+      console.log('game start, creating new agents...')
+      this.$router.push({ name: 'createAgent' })
+    }
   },
   computed: {
     redAgents () {
@@ -41,33 +45,41 @@ export default {
     },
     score () {
       return this.$store.state.score
+    },
+    rounds () {
+      return this.$store.state.rounds
     }
   },
   methods: {
     checkScores () {
-      // check if game is won:
+      // check if round is won:
       if (
-        this.$store.state.score.red === Globals.gameWonAtScore ||
-        this.$store.state.score.blue === Globals.gameWonAtScore
+        this.$store.state.score.red >= Globals.roundWonScore ||
+        this.$store.state.score.blue >= Globals.roundWonScore
       ) {
-        this.$router.push({ name: 'gameOver' })
-      }
-
-      // check if it is time for a new agent:
-      if (
-        this.$store.state.score.red % Globals.newAgentsAtScore === 0 ||
-        this.$store.state.score.blue % Globals.newAgentsAtScore === 0
-      ) {
+        console.log('round was won:', this.$store.state.score, this.$store.state.rounds)
+        // turn off simulation
         this.$store.commit('turnSimulationOff')
-        this.$router.push({ name: 'createAgent' })
-      } else {
-        this.$store.commit('turnSimulationOn')
+        // new round for the scores
+        this.$store.commit('newRound')
+        // check if the game is won:
+        if (
+          this.$store.state.rounds.red >= Globals.gameWonRounds ||
+          this.$store.state.rounds.blue >= Globals.gameWonRounds
+        ) {
+          this.$router.push({ name: 'gameOver' })
+        } else {
+          // not yet won, add a new agent in the game:
+          console.log('game was not yet won:', this.$store.state.redAgents.length, this.$store.state.scoreHistory.length)
+          if (this.$store.state.redAgents.length <= this.$store.state.scoreHistory.length) {
+            this.$router.push({ name: 'createAgent' })
+          }
+        }
       }
     }
   },
   watch: {
     score () {
-      console.log('score change')
       this.checkScores()
     }
   }

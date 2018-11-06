@@ -29,7 +29,9 @@
       <div class="left-part font-sm">
         <template v-if="samplesRed.length < neededNumSamples">
           <SampleAskUserInput
-            :nav-keys="keys.red" @selected="outputSelectedRed">
+            :input-sample="currentSampleRed"
+            :nav-keys="keys.red"
+            @selected="outputSelectedRed">
           </SampleAskUserInput>
         </template>
         <template v-else>
@@ -43,7 +45,9 @@
       <div class="right-part font-sm">
         <template v-if="samplesBlue.length < neededNumSamples">
           <SampleAskUserInput
-            :nav-keys="keys.blue" @selected="outputSelectedBlue">
+            :input-sample="currentSampleBlue"
+            :nav-keys="keys.blue"
+            @selected="outputSelectedBlue">
           </SampleAskUserInput>
         </template>
         <template v-else>
