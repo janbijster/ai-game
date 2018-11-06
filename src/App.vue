@@ -1,12 +1,7 @@
 <template>
   <div id="app">
     <router-view/>
-    <div id="nav" style="display:none"><!-- only for debugging -->
-      <router-link to="/">Simulation</router-link> |
-      <router-link to="/create">Create Agent</router-link> |
-      <router-link to="/create/input">Create Agent - select input</router-link> |
-      <router-link to="/create/collect">Create Agent - collect samples</router-link>
-    </div>
+
   </div>
 </template>
 

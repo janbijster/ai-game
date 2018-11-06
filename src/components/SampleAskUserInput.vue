@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import Sounds from '@/classes/Sounds.js'
+
 export default {
   name: 'SampleAskUserInput',
   props: {
@@ -57,6 +59,7 @@ export default {
         skipped = true
       }
       if (output !== null || skipped) {
+        Sounds.PlaySound('laser1')
         this.$emit('selected', output)
       }
     }

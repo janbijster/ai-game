@@ -22,7 +22,8 @@
 <script>
 // @ is an alias to /src
 import SimulationSpace from '@/components/SimulationSpace.vue'
-import Globals from '@/classes/Globals'
+import Globals from '@/classes/Globals.js'
+import Sounds from '@/classes/Sounds.js'
 
 export default {
   name: 'Simulation',
@@ -58,6 +59,7 @@ export default {
         this.$store.state.score.blue >= Globals.roundWonScore
       ) {
         console.log('round was won:', this.$store.state.score, this.$store.state.rounds)
+        Sounds.PlaySound('coin2')
         // turn off simulation
         this.$store.commit('turnSimulationOff')
         // new round for the scores
@@ -67,12 +69,14 @@ export default {
           this.$store.state.rounds.red >= Globals.gameWonRounds ||
           this.$store.state.rounds.blue >= Globals.gameWonRounds
         ) {
+          Sounds.PlaySound('coin2')
           this.$router.push({ name: 'gameOver' })
         } else {
           // not yet won, add a new agent in the game:
           console.log('game was not yet won:', this.$store.state.redAgents.length, this.$store.state.scoreHistory.length)
           if (this.$store.state.redAgents.length <= this.$store.state.scoreHistory.length) {
             this.$router.push({ name: 'createAgent' })
+            Sounds.PlaySound('laser2')
           }
         }
       }

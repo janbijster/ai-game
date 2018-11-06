@@ -29,6 +29,7 @@
 <script>
 import Robot from '@/classes/Robot.js'
 import Globals from '@/classes/Globals.js'
+import Sounds from '@/classes/Sounds.js'
 
 export default {
   name: 'CreateAgentTrain',
@@ -53,6 +54,7 @@ export default {
   },
   mounted () {
     // create agents after everything is loaded:
+    Sounds.PlaySound('coin1')
     setTimeout(this.createAgents.bind(this), 500)
   },
   methods: {
@@ -82,6 +84,7 @@ export default {
       setTimeout(this.stopTraining.bind(this), 1000 * (this.timeRemaining + 0.2))
     },
     showProgress () {
+      Sounds.PlaySound('click')
       // console.log('red: ', this.redAgent.robot.getState().parts[0].modelState.currentLoss)
       // console.log('blue: ', this.blueAgent.robot.getState().parts[0].modelState.currentLoss)
       this.timeRemaining -= 0.001 * this.updateInterval

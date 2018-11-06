@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import Sounds from '@/classes/Sounds.js'
+
 export default {
   name: 'ItemSelect',
   props: {
@@ -43,12 +45,15 @@ export default {
       if (!this.hasChosen) {
         if ('up' in this.navKeys && this.navKeys.up === event.key) {
           this.previousItem()
+          Sounds.PlaySound('bleep6')
         }
         if ('down' in this.navKeys && this.navKeys.down === event.key) {
           this.nextItem()
+          Sounds.PlaySound('bleep5')
         }
         if ('enter' in this.navKeys && this.navKeys.enter === event.key) {
           this.selectItem()
+          Sounds.PlaySound('bleep1')
         }
       }
     },

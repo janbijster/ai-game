@@ -10,6 +10,7 @@
 
 <script>
 import Globals from '@/classes/Globals.js'
+import Sounds from '@/classes/Sounds.js'
 
 export default {
   name: 'SimulationSpace',
@@ -177,6 +178,7 @@ export default {
           Math.pow(0.5 * (this.mediumObjectSize + resourceObject.life * this.smallObjectSize) / this.minimumDimension, 2)
         ) {
           // resource hit!
+          Sounds.PlaySound('jump')
           let mutationName = color === 'red' ? 'incrementScoreRed' : 'incrementScoreBlue'
           this.$store.commit(mutationName)
           this.renewResource(resourceObject)
