@@ -66,7 +66,6 @@ export default class RobotPart {
     if (myRobotState == null) {
       myRobotState = environmentState.blueRobots.find(robot => robot.id === this.robotId)
     }
-    // todo optimize this
     let closestResource = this.findClosestObject(myRobotState, environmentState.resources)
     let closestBlueRobot = this.findClosestObject(myRobotState, environmentState.blueRobots)
     let closestRedRobot = this.findClosestObject(myRobotState, environmentState.redRobots)
@@ -140,6 +139,10 @@ export default class RobotPart {
 
   setSamples (newSamples) {
     this.brain.setSamples(newSamples)
+  }
+
+  trainBatch () {
+    return this.brain.trainBatch()
   }
 
   train (maximumNumberOfSamples, maximumTime = Infinity, stopIfNotImproving = false) {

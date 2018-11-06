@@ -191,14 +191,15 @@ export default {
           let dist = this.squareDistance(agentObject, otherAgentObject)
           if (dist < this.mediumObjectSquareCollisionDistance) {
             // collide with other agent
+            Sounds.PlaySound('explosion')
             // push other agent out of the way:
             let xNudge = otherAgentObject.x - agentObject.x
             let yNudge = otherAgentObject.y - agentObject.y
             let unitVector = this.makeUnitLength(xNudge, yNudge)
             xNudge = unitVector.x
             yNudge = unitVector.y
-            // the 0.51 in the following line is to make sure that if they both nudge each other, they stop overlapping
-            let nudgeSize = 0.51 * Math.sqrt(this.mediumObjectSquareCollisionDistance - dist)
+            // with a nudgesize > 0.5 we make sure that if they both nudge each other, they stop overlapping
+            let nudgeSize = 3 * Math.sqrt(this.mediumObjectSquareCollisionDistance - dist)
             otherAgentObject.x += xNudge * nudgeSize
             otherAgentObject.y += yNudge * nudgeSize
           }

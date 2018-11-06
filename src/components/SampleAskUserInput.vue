@@ -53,6 +53,9 @@ export default {
       if ('enter' in this.navKeys && this.navKeys.enter === event.key) {
         output = [0, 0]
         // cheat hack: output = input todo remove
+        // todo more:
+        // - timeout for each round
+        // - 
         output = this.inputSample[0]
       }
       if ('back' in this.navKeys && this.navKeys.back === event.key) {

@@ -48,7 +48,7 @@ export default {
       blueLossIndicatorStyle: {},
       loss: { red: 1, blue: 1 },
       timeRemaining: 10,
-      updateInterval: 1000,
+      updateInterval: 200,
       agentsDone: 0
     }
   },
@@ -73,12 +73,7 @@ export default {
       this.timeRemaining = Globals.trainingTime
 
       this.redAgent.robot.setSamples(0, this.redAgent.samples)
-      // train part 0 of the red robot for 10 seconds:
-      this.redAgent.robot.train(0, Infinity, this.timeRemaining)
-
       this.blueAgent.robot.setSamples(0, this.blueAgent.samples)
-      // train part 0 of the blue robot for 10 seconds:
-      this.blueAgent.robot.train(0, Infinity, this.timeRemaining)
 
       this.intervalId = setInterval(this.showProgress, this.updateInterval)
       setTimeout(this.stopTraining.bind(this), 1000 * (this.timeRemaining + 0.2))
@@ -90,25 +85,22 @@ export default {
       this.timeRemaining -= 0.001 * this.updateInterval
 
       this.loss = {
-        red: this.redAgent.robot.getState().parts[0].modelState.movingAverageLoss,
-        blue: this.blueAgent.robot.getState().parts[0].modelState.movingAverageLoss
+        red: this.redAgent.robot.trainBatch(0),
+        blue: this.blueAgent.robot.trainBatch(0)
       }
       this.redLossIndicatorStyle = {
         backgroundColor: '#BE5046',
-        width: (100 * (1 - this.redAgent.robot.getState().parts[0].modelState.movingAverageLoss)) + '%'
+        width: (100 * (1 - this.loss.red)) + '%'
       }
       this.blueLossIndicatorStyle = {
         backgroundColor: '#528BFF',
-        width: (100 * (1 - this.blueAgent.robot.getState().parts[0].modelState.movingAverageLoss)) + '%'
+        width: (100 * (1 - this.loss.blue)) + '%'
       }
     },
     stopTraining () {
       this.$store.commit('addRedAgent', this.redAgent)
       this.$store.commit('addBlueAgent', this.blueAgent)
       clearInterval(this.intervalId)
-      // todo change temp hack into a better mechanism
-      this.$store.commit('incrementScoreRed')
-      this.$store.commit('incrementScoreBlue')
       this.$router.push({ name: 'simulation' })
       this.$store.commit('turnSimulationOn')
     }

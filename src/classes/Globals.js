@@ -54,7 +54,7 @@ export default class Globals {
   }
 
   static get trainingTime () {
-    return 20
+    return 10
   }
 
   static get agentSpeed () {

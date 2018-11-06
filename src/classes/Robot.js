@@ -100,6 +100,10 @@ export default class Robot {
     this.parts[partIndex].setSamples(newSamples)
   }
 
+  trainBatch (partIndex) {
+    return this.parts[partIndex].trainBatch()
+  }
+
   train (partIndex, maximumNumberOfSamples, maximumTime = Infinity, stopIfNotImproving = false) {
     this.parts[partIndex].train(maximumNumberOfSamples, maximumTime, stopIfNotImproving)
   }
