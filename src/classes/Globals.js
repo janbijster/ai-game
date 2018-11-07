@@ -1,7 +1,7 @@
 export default class Globals {
   static get inputOptions () {
     return [
-      { name: 'Closest Target Position', value: 'CLOSEST_RESOURCE_POSITION', sensors: ['CLOSEST_RESOURCE_POSITION_X', 'CLOSEST_RESOURCE_POSITION_Y'] },
+      { name: 'Closest Resource Position', value: 'CLOSEST_RESOURCE_POSITION', sensors: ['CLOSEST_RESOURCE_POSITION_X', 'CLOSEST_RESOURCE_POSITION_Y'] },
       { name: 'Closest Blue Agent position', value: 'CLOSEST_BLUE_AGENT_POSITION', sensors: ['CLOSEST_BLUE_AGENT_POSITION_X', 'CLOSEST_BLUE_AGENT_POSITION_Y'] },
       { name: 'Closest Red Agent position', value: 'CLOSEST_RED_AGENT_POSITION', sensors: ['CLOSEST_RED_AGENT_POSITION_X', 'CLOSEST_RED_AGENT_POSITION_Y'] },
       { name: 'Field Position', value: 'FIELD_POSITION', sensors: ['FIELD_POSITION_X', 'FIELD_POSITION_Y'] }
@@ -66,7 +66,7 @@ export default class Globals {
   }
 
   static get roundWonScore () {
-    return 25
+    return 250
   }
 
   static get gameWonRounds () {

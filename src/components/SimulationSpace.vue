@@ -98,7 +98,8 @@ export default {
 
       // decrease resource size:
       this.resourceObjects.forEach(resource => {
-        resource.life -= (deltaTime / this.resourceVanishingTime)
+        // change: decrease resource on hit only
+        // resource.life -= (deltaTime / this.resourceVanishingTime)
         // and relocate when the time is there:
         if (resource.life < 0) {
           this.renewResource(resource)
@@ -178,10 +179,15 @@ export default {
           Math.pow(0.5 * (this.mediumObjectSize + resourceObject.life * this.smallObjectSize) / this.minimumDimension, 2)
         ) {
           // resource hit!
-          Sounds.PlaySound('jump')
-          let mutationName = color === 'red' ? 'incrementScoreRed' : 'incrementScoreBlue'
-          this.$store.commit(mutationName)
-          this.renewResource(resourceObject)
+          let rounderdResourceLifeBefore = Math.floor(resourceObject.life * this.resourceVanishingTime)
+          resourceObject.life -= (deltaTime / this.resourceVanishingTime)
+          let roundedResourceLifeAfter = Math.floor(resourceObject.life * this.resourceVanishingTime)
+          if (roundedResourceLifeAfter < rounderdResourceLifeBefore) {
+            Sounds.PlaySound('jump')
+            let mutationName = color === 'red' ? 'incrementScoreRed' : 'incrementScoreBlue'
+            this.$store.commit(mutationName)
+          }
+          // this.renewResource(resourceObject)
         }
       })
 

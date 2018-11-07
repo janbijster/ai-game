@@ -12,7 +12,7 @@
       </div>
       <div class="right-part">
         <div class="color-blue align-right">
-          Targets hit: {{ score.blue }} | Rounds: {{ rounds.blue }}
+          Resources mined: {{ score.blue }} | Rounds: {{ rounds.blue }}
         </div>
       </div>
     </div>
