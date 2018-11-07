@@ -1,10 +1,10 @@
 export default class Globals {
   static get inputOptions () {
     return [
-      { name: 'Field Position', value: 'FIELD_POSITION', sensors: ['FIELD_POSITION_X', 'FIELD_POSITION_Y'] },
-      { name: 'Closest Resource Position', value: 'CLOSEST_RESOURCE_POSITION', sensors: ['CLOSEST_RESOURCE_POSITION_X', 'CLOSEST_RESOURCE_POSITION_Y'] },
+      { name: 'Closest Target Position', value: 'CLOSEST_RESOURCE_POSITION', sensors: ['CLOSEST_RESOURCE_POSITION_X', 'CLOSEST_RESOURCE_POSITION_Y'] },
       { name: 'Closest Blue Agent position', value: 'CLOSEST_BLUE_AGENT_POSITION', sensors: ['CLOSEST_BLUE_AGENT_POSITION_X', 'CLOSEST_BLUE_AGENT_POSITION_Y'] },
-      { name: 'Closest Red Agent position', value: 'CLOSEST_RED_AGENT_POSITION', sensors: ['CLOSEST_RED_AGENT_POSITION_X', 'CLOSEST_RED_AGENT_POSITION_Y'] }
+      { name: 'Closest Red Agent position', value: 'CLOSEST_RED_AGENT_POSITION', sensors: ['CLOSEST_RED_AGENT_POSITION_X', 'CLOSEST_RED_AGENT_POSITION_Y'] },
+      { name: 'Field Position', value: 'FIELD_POSITION', sensors: ['FIELD_POSITION_X', 'FIELD_POSITION_Y'] }
     ]
   }
 
@@ -15,10 +15,10 @@ export default class Globals {
   static get keys () {
     return {
       red: {
-        leftUp: 'q', up: 'w', rightUp: 'e', left: 'a', right: 'd', leftDown: 'z', down: 'x', rightDown: 'c', enter: 'f', back: 'v'
+        leftUp: 'q', up: 'w', rightUp: 'e', left: 'a', right: 'd', leftDown: 'z', down: 'x', rightDown: 'c', enter: 'f', back: 'v', gamepad: 0
       },
       blue: {
-        leftUp: '7', up: '8', rightUp: '9', left: '4', right: '6', leftDown: '1', down: '2', rightDown: '3', enter: 'Enter', back: 'Backspace'
+        leftUp: '7', up: '8', rightUp: '9', left: '4', right: '6', leftDown: '1', down: '2', rightDown: '3', enter: 'Enter', back: 'Backspace', gamepad: 1
       }
     }
   }
@@ -71,6 +71,10 @@ export default class Globals {
 
   static get gameWonRounds () {
     return 3
+  }
+
+  static get roundTime () {
+    return 30
   }
 
   static forceArrayChangeDetection (arr) {

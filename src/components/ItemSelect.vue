@@ -27,12 +27,23 @@ export default {
     },
     navKeys: {
       type: Object,
-      default: function () { return { up: 'ArrowUp', down: 'ArrowDown', enter: 'Enter' } }
+      default: function () { return { up: 'ArrowUp', down: 'ArrowDown', enter: 'Enter', gamepad: 0 } }
     },
     items: Array
   },
   mounted () {
+    // for keys:
     window.addEventListener('keydown', this.keyPress)
+    // for gamepad:
+    this.$store.commit('addGamepadAxesCallback', {
+      gamepadIndex: this.navKeys.gamepad,
+      callback: this.gamepadAxes
+    })
+    this.$store.commit('addGamepadCallback', {
+      gamepadIndex: this.navKeys.gamepad,
+      buttonIndex: 0,
+      callback: this.selectItem
+    })
   },
   data () {
     return {
@@ -41,33 +52,40 @@ export default {
     }
   },
   methods: {
+    gamepadAxes (input) {
+      if (input[1] > 0) {
+        this.previousItem()
+      } else if (input[1] < 0) {
+        this.nextItem()
+      }
+    },
     keyPress: function (event) {
       if (!this.hasChosen) {
         if ('up' in this.navKeys && this.navKeys.up === event.key) {
           this.previousItem()
-          Sounds.PlaySound('bleep6')
         }
         if ('down' in this.navKeys && this.navKeys.down === event.key) {
           this.nextItem()
-          Sounds.PlaySound('bleep5')
         }
         if ('enter' in this.navKeys && this.navKeys.enter === event.key) {
           this.selectItem()
-          Sounds.PlaySound('bleep1')
         }
       }
     },
     previousItem () {
+      Sounds.PlaySound('bleep6')
       if (this.selectIndex > 0) {
         this.selectIndex--
       }
     },
     nextItem () {
+      Sounds.PlaySound('bleep5')
       if (this.selectIndex < this.items.length - 1) {
         this.selectIndex++
       }
     },
     selectItem () {
+      Sounds.PlaySound('bleep1')
       this.hasChosen = true
       this.$emit('selected', this.selectIndex)
     },

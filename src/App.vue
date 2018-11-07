@@ -10,13 +10,6 @@ export default {
   name: 'App',
   mounted () {
     this.$store.commit('startGamepad')
-    this.$store.commit('addGamepadCallback', {
-      gamepadIndex: 0,
-      buttonIndex: 0,
-      callback: () => {
-        console.log('And i know it')
-      }
-    })
   }
 }
 </script>

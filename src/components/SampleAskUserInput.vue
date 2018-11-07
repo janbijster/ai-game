@@ -4,7 +4,6 @@
       Select action for this situation:<br>
       <span class="color-red">Joystick = move</span><br>
       <span class="color-green">Enter = stand still</span><br>
-      <span class="color-special">Back = skip sample</span>
     </div>
     <!-- image displaying the options -->
   </div>
@@ -20,9 +19,26 @@ export default {
     navKeys: Object
   },
   mounted () {
+    // for keys:
     window.addEventListener('keydown', this.keyPress)
+    // for gamepad:
+    this.$store.commit('addGamepadAxesCallback', {
+      gamepadIndex: this.navKeys.gamepad,
+      callback: this.gamepadAxes
+    })
+    this.$store.commit('addGamepadCallback', {
+      gamepadIndex: this.navKeys.gamepad,
+      buttonIndex: 0,
+      callback: this.gamepadAxes
+    })
   },
   methods: {
+    gamepadAxes (input) {
+      if (input == null) {
+        input = [0, 0]
+      }
+      this.selectOutput(input)
+    },
     keyPress: function (event) {
       let output = null
       let skipped = false
@@ -55,16 +71,19 @@ export default {
         // cheat hack: output = input todo remove
         // todo more:
         // - timeout for each round
-        // - map gamepad keys
         output = this.inputSample[0]
       }
       if ('back' in this.navKeys && this.navKeys.back === event.key) {
         skipped = true
       }
       if (output !== null || skipped) {
-        Sounds.PlaySound('laser1')
-        this.$emit('selected', output)
+        this.selectOutput(output)
       }
+    },
+    selectOutput (output) {
+      Sounds.PlaySound('laser1')
+      // console.log('selected output: ', output)
+      this.$emit('selected', output)
     }
   }
 }

@@ -19,7 +19,10 @@ export default class Gamepad {
     if (this.axesCallbacks[gamepadIndex][0] == null) {
       this.axesCallbacks[gamepadIndex][0] = []
     }
-    this.axesCallbacks[gamepadIndex][0].push(callback)
+    // there can be only one callback a time for an event.
+    // todo later: change the naming that implies otherwise ('add')
+    // this.axesCallbacks[gamepadIndex][0].push(callback)
+    this.axesCallbacks[gamepadIndex][0] = [callback]
   }
 
   addCallback (gamepadIndex, buttonIndex, callback) {
@@ -29,7 +32,10 @@ export default class Gamepad {
     if (this.callbacks[gamepadIndex][buttonIndex] == null) {
       this.callbacks[gamepadIndex][buttonIndex] = []
     }
-    this.callbacks[gamepadIndex][buttonIndex].push(callback)
+    // there can be only one callback a time for an event.
+    // todo later: change the naming that implies otherwise ('add')
+    // this.callbacks[gamepadIndex][buttonIndex].push(callback)
+    this.callbacks[gamepadIndex][buttonIndex] = [callback]
   }
 
   undefindedOrFalse (obj, key1, key2) {
@@ -56,7 +62,7 @@ export default class Gamepad {
   }
 
   deferredAxesTrigger (previousInput, gamepad, gamepadIndex) {
-    let input = [ Math.round(-gamepad.axes[0]), Math.round(-gamepad.axes[1]) ]
+    let input = [ Math.round(-gamepad.axes[0]), Math.round(gamepad.axes[1]) ]
     if (Math.abs(previousInput[0]) > Math.abs(input[0])) {
       input[0] = previousInput[0]
     }

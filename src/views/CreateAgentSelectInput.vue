@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     inputSelectedRed (index) {
-      console.log('Selected input for redAgent: ', this.items[index])
+      // console.log('Selected input for redAgent: ', this.items[index])
       this.redAgent.sensorChoice = this.items[index].value
       this.redAgent.part = { sensors: this.items[index].sensors }
       // add fixed actuators:
@@ -46,7 +46,7 @@ export default {
       this.$emit('red-agent-input-selected')
     },
     inputSelectedBlue (index) {
-      console.log('Selected input for blueAgent: ', this.items[index])
+      // console.log('Selected input for blueAgent: ', this.items[index])
       this.blueAgent.sensorChoice = this.items[index].value
       this.blueAgent.part = { sensors: this.items[index].sensors }
       // add fixed actuators:

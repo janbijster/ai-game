@@ -27,6 +27,9 @@ export default new Vuex.Store({
     addGamepadCallback (state, payload) {
       state.gamepad.addCallback(payload.gamepadIndex, payload.buttonIndex, payload.callback)
     },
+    addGamepadAxesCallback (state, payload) {
+      state.gamepad.addAxesCallback(payload.gamepadIndex, payload.callback)
+    },
     addRedAgent (state, agent) {
       state.redAgents.push(agent)
     },

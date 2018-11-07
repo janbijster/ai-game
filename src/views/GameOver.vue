@@ -26,19 +26,33 @@ export default {
   components: {
   },
   mounted () {
+    // for keys:
     window.addEventListener('keydown', this.keyPress)
+    // for gamepad:
+    this.$store.commit('addGamepadCallback', {
+      gamepadIndex: 0,
+      buttonIndex: 0,
+      callback: this.newGame
+    })
+    this.$store.commit('addGamepadCallback', {
+      gamepadIndex: 1,
+      buttonIndex: 0,
+      callback: this.newGame
+    })
   },
   methods: {
+    newGame () {
+      this.$router.push({ name: 'simulation' })
+      location.reload()
+    },
     keyPress: function (event) {
       let redKeys = Globals.keys.red
       let blueKeys = Globals.keys.blue
-
       if (
         ('enter' in redKeys && redKeys.enter === event.key) ||
         ('enter' in blueKeys && blueKeys.enter === event.key)
       ) {
-        this.$router.push({ name: 'simulation' })
-        location.reload()
+        this.newGame()
       }
     }
   },

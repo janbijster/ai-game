@@ -1,7 +1,10 @@
 <template>
   <div class="sample-box" ref="box">
     <div id="viewport" :style="viewportStyle">
-      <div class="object" :style="objectStyle"></div>
+      <div class="object" :style="objectStyle">
+        <div class="object-cross object-cross-hor" :style="objectCrossColorStyle"></div>
+        <div class="object-cross object-cross-ver" :style="objectCrossColorStyle"></div>
+      </div>
       <div class="agent" :style="agentStyle"></div>
     </div>
   </div>
@@ -21,9 +24,9 @@ export default {
     if (this.$refs['box'] != null) {
       this.bounds = this.$refs['box'].getBoundingClientRect()
       this.minimumDimension = Math.min(this.bounds.width, this.bounds.height)
-      this.smallObjectSize = 0.03 * this.minimumDimension
+      this.smallObjectSize = 0.04 * this.minimumDimension
       this.mediumObjectSize = 0.04 * this.minimumDimension
-      this.bigObjectSize = 0.05 * this.minimumDimension
+      this.bigObjectSize = 0.06 * this.minimumDimension
     }
 
     if (this.agent != null) {
@@ -52,7 +55,8 @@ export default {
       bigObjectSize: 0,
       objectSize: 0,
       viewportStyle: {},
-      objectStyle: {}
+      objectStyle: {},
+      objectCrossColorStyle: {}
     }
   },
   computed: {
@@ -92,15 +96,19 @@ export default {
       }
       if (this.agent.sensorChoice === 'FIELD_POSITION') {
         style.backgroundColor = Globals.colors.grey.main
+        this.objectCrossColorStyle.backgroundColor = 'rgba(0, 0, 0, 0)'
         style.border = '2px solid #ABB2BF'
       } else if (this.agent.sensorChoice === 'CLOSEST_RESOURCE_POSITION') {
-        style.backgroundColor = Globals.colors.green.main
+        style.backgroundColor = 'rgba(0, 0, 0, 0)'// = Globals.colors.green.main
+        this.objectCrossColorStyle.backgroundColor = Globals.colors.green.main
         style.borderRadius = '100%'
       } else if (this.agent.sensorChoice === 'CLOSEST_BLUE_AGENT_POSITION') {
-        style.backgroundColor = Globals.colors.blue.main
+        style.backgroundColor = 'rgba(0, 0, 0, 0)'// = Globals.colors.blue.main
+        this.objectCrossColorStyle.backgroundColor = Globals.colors.blue.main
         style.borderRadius = '100%'
       } else if (this.agent.sensorChoice === 'CLOSEST_RED_AGENT_POSITION') {
-        style.backgroundColor = Globals.colors.red.main
+        style.backgroundColor = 'rgba(0, 0, 0, 0)'// = Globals.colors.red.main
+        this.objectCrossColorStyle.backgroundColor = Globals.colors.red.main
         style.borderRadius = '100%'
       }
 
@@ -138,7 +146,22 @@ export default {
   .object {
     position: absolute;
     border-radius: 0 !important;
-
+  }
+  .object-cross {
+    position: absolute;
+    opacity: 0.5;
+  }
+  .object-cross-hor {
+    top: 43%;
+    left: -100%;
+    width: 300%;
+    height: 15%;
+  }
+  .object-cross-ver {
+    top: -100%;
+    left: 43%;
+    width: 15%;
+    height: 300%;
   }
   #viewport {
     position: absolute;
