@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Gamepad from '@/classes/Gamepad.js'
 
 Vue.use(Vuex)
 
@@ -16,9 +17,16 @@ export default new Vuex.Store({
       blue: 0
     },
     scoreHistory: [],
-    simulationOn: false
+    simulationOn: false,
+    gamepad: new Gamepad()
   },
   mutations: {
+    startGamepad (state) {
+      state.gamepad.start()
+    },
+    addGamepadCallback (state, payload) {
+      state.gamepad.addCallback(payload.gamepadIndex, payload.buttonIndex, payload.callback)
+    },
     addRedAgent (state, agent) {
       state.redAgents.push(agent)
     },

@@ -55,7 +55,7 @@ export default {
         // cheat hack: output = input todo remove
         // todo more:
         // - timeout for each round
-        // - 
+        // - map gamepad keys
         output = this.inputSample[0]
       }
       if ('back' in this.navKeys && this.navKeys.back === event.key) {
