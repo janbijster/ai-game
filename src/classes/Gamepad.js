@@ -12,34 +12,27 @@ export default class Gamepad {
     requestAnimationFrame(this.update.bind(this))
   }
 
-  addAxesCallback (gamepadIndex, callback) {
-    if (this.axesCallbacks[gamepadIndex] == null) {
-      this.axesCallbacks[gamepadIndex] = {}
-    }
-    if (this.axesCallbacks[gamepadIndex][0] == null) {
-      this.axesCallbacks[gamepadIndex][0] = []
-    }
-    // there can be only one callback a time for an event.
-    // todo later: change the naming that implies otherwise ('add')
-    // this.axesCallbacks[gamepadIndex][0].push(callback)
-    this.axesCallbacks[gamepadIndex][0] = [callback]
+  setAxesCallback (gamepadIndex, callback) {
+    this.axesCallbacks[gamepadIndex] = callback
   }
 
-  addCallback (gamepadIndex, buttonIndex, callback) {
+  setCallback (gamepadIndex, buttonIndex, callback) {
     if (this.callbacks[gamepadIndex] == null) {
       this.callbacks[gamepadIndex] = {}
     }
-    if (this.callbacks[gamepadIndex][buttonIndex] == null) {
-      this.callbacks[gamepadIndex][buttonIndex] = []
-    }
-    // there can be only one callback a time for an event.
-    // todo later: change the naming that implies otherwise ('add')
-    // this.callbacks[gamepadIndex][buttonIndex].push(callback)
-    this.callbacks[gamepadIndex][buttonIndex] = [callback]
+    this.callbacks[gamepadIndex][buttonIndex] = callback
   }
 
   undefindedOrFalse (obj, key1, key2) {
-    return (obj[key1] == null || obj[key1][key2] == null || !obj[key1][key2])
+    if (key2 == null) {
+      return (obj[key1] == null || !obj[key1])
+    } else {
+      return (obj[key1] == null || obj[key1][key2] == null || !obj[key1][key2])
+    }
+  }
+
+  defined (obj, key1, key2) {
+    return (obj[key1] != null && obj[key1][key2] != null)
   }
 
   setNestedValue (obj, key1, key2, val) {
@@ -49,19 +42,21 @@ export default class Gamepad {
     obj[key1][key2] = val
   }
 
-  triggerNestedCallbacks (callbacks, key1, key2, param) {
-    if (callbacks[key1] != null && callbacks[key1][key2] != null && callbacks[key1][key2].length > 0) {
-      callbacks[key1][key2].forEach(callback => {
-        if (param == null) {
-          callback()
-        } else {
-          callback(param)
-        }
-      })
+  triggerButtonCallback (key1, key2) {
+    if (this.callbacks[key1] != null && this.callbacks[key1][key2] != null) {
+      this.callbacks[key1][key2]()
+    }
+  }
+
+  triggerAxesCallback (key, param) {
+    if (this.axesCallbacks[key] != null) {
+      this.axesCallbacks[key](param)
     }
   }
 
   deferredAxesTrigger (previousInput, gamepad, gamepadIndex) {
+    // if the user pushes the joystick diagonal, the trigger may go off to soon, when only one of the axes is active.
+    // so we query the input again after a small delay and take the abs max value for the inputs
     let input = [ Math.round(-gamepad.axes[0]), Math.round(gamepad.axes[1]) ]
     if (Math.abs(previousInput[0]) > Math.abs(input[0])) {
       input[0] = previousInput[0]
@@ -70,7 +65,7 @@ export default class Gamepad {
       input[1] = previousInput[1]
     }
     // console.log(`Axes of gamepad ${gamepadIndex} pressed: `, input)
-    this.triggerNestedCallbacks(this.axesCallbacks, gamepadIndex, 0, input)
+    this.triggerAxesCallback(gamepadIndex, input)
   }
 
   update () {
@@ -82,15 +77,15 @@ export default class Gamepad {
       if (gamepad) {
         if ((Math.abs(gamepad.axes[0]) > 0.5) || (Math.abs(gamepad.axes[1]) > 0.5)) {
           // check for fresh press
-          if (this.undefindedOrFalse(this.axesPressed, gamepadIndex, 0)) {
-            this.setNestedValue(this.axesPressed, gamepadIndex, 0, true)
+          if (this.undefindedOrFalse(this.axesPressed, gamepadIndex)) {
+            this.axesPressed[gamepadIndex] = true
             let input = [ Math.round(-gamepad.axes[0]), Math.round(gamepad.axes[1]) ]
             setTimeout(() => {
               this.deferredAxesTrigger(input, gamepad, gamepadIndex)
             }, 100) // a little later so the user can trigger other axes also if it moves diagonal
           }
         } else {
-          this.setNestedValue(this.axesPressed, gamepadIndex, 0, false)
+          this.axesPressed[gamepadIndex] = false
         }
         gamepad.buttons.forEach((button, buttonIndex) => {
           if (button.pressed) {
@@ -98,7 +93,7 @@ export default class Gamepad {
             if (this.undefindedOrFalse(this.pressed, gamepadIndex, buttonIndex)) {
               // console.log(`Button ${buttonIndex} of gamepad ${gamepadIndex} pressed!`)
               this.setNestedValue(this.pressed, gamepadIndex, buttonIndex, true)
-              this.triggerNestedCallbacks(this.callbacks, gamepadIndex, buttonIndex)
+              this.triggerButtonCallback(gamepadIndex, buttonIndex)
             }
           } else {
             this.setNestedValue(this.pressed, gamepadIndex, buttonIndex, false)

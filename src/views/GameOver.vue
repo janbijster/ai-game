@@ -29,12 +29,12 @@ export default {
     // for keys:
     window.addEventListener('keydown', this.keyPress)
     // for gamepad:
-    this.$store.commit('addGamepadCallback', {
+    this.$store.commit('setGamepadCallback', {
       gamepadIndex: 0,
       buttonIndex: 0,
       callback: this.newGame
     })
-    this.$store.commit('addGamepadCallback', {
+    this.$store.commit('setGamepadCallback', {
       gamepadIndex: 1,
       buttonIndex: 0,
       callback: this.newGame

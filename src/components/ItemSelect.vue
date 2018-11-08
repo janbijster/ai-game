@@ -35,11 +35,11 @@ export default {
     // for keys:
     window.addEventListener('keydown', this.keyPress)
     // for gamepad:
-    this.$store.commit('addGamepadAxesCallback', {
+    this.$store.commit('setGamepadAxesCallback', {
       gamepadIndex: this.navKeys.gamepad,
       callback: this.gamepadAxes
     })
-    this.$store.commit('addGamepadCallback', {
+    this.$store.commit('setGamepadCallback', {
       gamepadIndex: this.navKeys.gamepad,
       buttonIndex: 0,
       callback: this.selectItem
