@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle color-accent">Collect samples</div>
+    <div class="subtitle color-accent">Collect samples</div><div class="color-green">Repeatedly select the desired movement w.r.t. target</div>
     <div id="samples">
 
       <div class="left-part">
@@ -38,7 +38,7 @@
           <div class="center-message">Done!</div>
         </template>
         <div class="sample-status color-accent font-sm">
-          Samples collected: {{ samplesRed.length }}
+          Samples collected: {{ samplesRed.length }}/{{ neededNumSamples }}
         </div>
       </div>
 
@@ -157,7 +157,7 @@ export default {
 <style>
 #samples {
   position: absolute;
-  top: 50px;
+  top: 100px;
   left: 0;
   right: 0;
   bottom: 100px;

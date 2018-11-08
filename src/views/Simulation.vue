@@ -1,18 +1,18 @@
 <template>
   <div id="simulation">
-    <div class="title color-yellow">Simulation {{ timer }}...</div>
+    <div class="title color-yellow">Round {{ currentRound }} (best of 5) {{ timer }}...</div>
     <div id="simulation-space">
       <SimulationSpace></SimulationSpace>
     </div>
     <div id="status">
       <div class="left-part">
         <div class="color-red align-left">
-          Score: {{ score.red }} | Rounds: {{ rounds.red }}
+          Resources mined this round: <span class="subtitle">{{ score.red }}</span> Rounds won: <span class="subtitle">{{ rounds.red }}</span>
         </div>
       </div>
       <div class="right-part">
         <div class="color-blue align-right">
-          Resources mined: {{ score.blue }} | Rounds: {{ rounds.blue }}
+          Resources mined this round: <span class="subtitle">{{ score.blue }}</span> Rounds won: <span class="subtitle">{{ rounds.blue }}</span>
         </div>
       </div>
     </div>
@@ -56,6 +56,15 @@ export default {
     },
     rounds () {
       return this.$store.state.rounds
+    },
+    currentRound () {
+      return (this.$store.state.rounds.red || 0) + (this.$store.state.rounds.blue || 0) + 1
+    },
+    roundWonScore () {
+      return Globals.roundWonScore
+    },
+    gameWonRounds () {
+      return Globals.gameWonRounds
     }
   },
   methods: {

@@ -122,7 +122,7 @@ export default {
     left: 0;
   }
   .margin-top {
-    margin-top: 150px;
+    margin-top: 300px;
     position: relative;
   }
 </style>

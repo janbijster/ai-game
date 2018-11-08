@@ -99,7 +99,7 @@ export default {
       // decrease resource size:
       this.resourceObjects.forEach(resource => {
         // change: decrease resource on hit only
-        // resource.life -= (deltaTime / this.resourceVanishingTime)
+        resource.life -= (0.25 * deltaTime / this.resourceVanishingTime)
         // and relocate when the time is there:
         if (resource.life < 0) {
           this.renewResource(resource)

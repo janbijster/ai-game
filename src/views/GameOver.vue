@@ -43,7 +43,8 @@ export default {
   methods: {
     newGame () {
       this.$router.push({ name: 'simulation' })
-      location.reload()
+      window.location = window.location.href.substr(0, window.location.href.indexOf('#'))
+      // location.reload()
     },
     keyPress: function (event) {
       let redKeys = Globals.keys.red
@@ -77,7 +78,7 @@ export default {
   }
   #history {
     position: absolute;
-    top: 200px;
+    top: 400px;
     left: 0;
     right: 0;
     bottom: 0;

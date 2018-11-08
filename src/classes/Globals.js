@@ -62,7 +62,7 @@ export default class Globals {
   }
 
   static get agentInertia () {
-    return 0.95
+    return 0.97
   }
 
   static get roundWonScore () {
